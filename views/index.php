@@ -1,91 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+//session_start(); // Para recordar la selección de idioma
 
-    <head>
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+require_once 'vendor/autoload.php'; // Cargar Twig
 
-        <title>eNno Bootstrap Template - Index</title>
-        <meta content="" name="description">
-        <meta content="" name="keywords">
+//// Definir idioma (por GET, sesión o por defecto)
+//$lang = $_GET['lang'] ?? $_SESSION['lang'] ?? 'es';
+//
+//// Validar que el idioma existe
+//if (!in_array($lang, ['es', 'en', 'fr'])) {
+//    $lang = 'es';
+//}
+//
+//// Guardar en sesión
+//$_SESSION['lang'] = $lang;
 
-        <!-- Favicons -->
-        <link href="www/public_html/eNno/views/assets/img/favicon.png" rel="icon">
-        <link href="www/public_html/eNno/views/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+// Cargar archivo de traducción
+$langFile = __DIR__ . "/languages/es.php";
 
-        <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-        <!-- Vendor CSS Files -->
-        <link href="www/public_html/eNno/views/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="www/public_html/eNno/views/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-        <link href="www/public_html/eNno/views/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-        <link href="www/public_html/eNno/views/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-        <link href="www/public_html/eNno/views/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+if (!file_exists($langFile)) {
+    die("Error: Archivo de idioma no encontrado.");
+}
 
-        <!-- Template Main CSS File -->
-        <link href="www/public_html/eNno/views/assets/css/style.css" rel="stylesheet">
+$translations = require $langFile;
 
-        <?php
-        /**
-         * 
-          <!-- =======================================================
-         * Template Name: eNno - v4.7.0
-         * Template URL: https://bootstrapmade.com/enno-free-simple-bootstrap-template/
-         * Author: BootstrapMade.com
-         * License: https://bootstrapmade.com/license/
-          ======================================================== -->
-         */
-        ?>
-    </head>
+// Configurar Twig
+$loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/templates');
+$twig = new \Twig\Environment($loader, ['cache' => false]);
 
-    <body>
-
-        <header id="header" class="fixed-top">
-            <div class="container d-flex align-items-center justify-content-between">
-
-                <h1 class="logo"><a href="index.html">La camara</a></h1>
-
-                <!-- Uncomment below if you prefer to use an image logo -->
-                <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
-                <?php include "nav.php"; ?>
-
-            </div>
-        </header>
-        
-        <?php include "hero.php"; ?>
-
-        <main id="main">
-
-            <?php include "featured-services.php"; ?>
-            <?php include "about.php"; ?>
-            <?php include "counts.php"; ?>
-            <?php include "services.php"; ?>
-            <?php include "portfolio.php"; ?>
-            <?php include "testimonials.php"; ?>
-            <?php include "cta.php"; ?>
-            <?php include "team.php"; ?>
-            <?php include "contact.php"; ?>
-            
-
-        </main>
-        
-        <?php include "footer.php"; ?>
-
-        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-        <!-- Vendor JS Files -->
-        <script src="www/public_html/eNno/views/assets/vendor/purecounter/purecounter.js"></script>
-        <script src="www/public_html/eNno/views/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="www/public_html/eNno/views/assets/vendor/glightbox/js/glightbox.min.js"></script>
-        <script src="www/public_html/eNno/views/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-        <script src="www/public_html/eNno/views/assets/vendor/swiper/swiper-bundle.min.js"></script>
-        <script src="www/public_html/eNno/views/assets/vendor/php-email-form/validate.js"></script>
-
-        <!-- Template Main JS File -->
-        <script src="www/public_html/eNno/views/assets/js/main.js"></script>
-
-    </body>
-
-</html>
+// Renderizar plantilla con todas las variables
+echo $twig->render('index.twig', [
+    'la_camara' => 'La Cámara',
+    'title' => 'Bienvenido a La Cámara',
+    'description' => 'Una red de oportunidades para empresarios latinos',
+    'web' => 'https://www.la-camara.com',
+    't' => $translations // Pasar las traducciones a Twig
+]);
